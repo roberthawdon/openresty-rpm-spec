@@ -9,7 +9,7 @@ URL:		openresty.org
 Source0:	http://openresty.org/download/%{name}-%{version}.tar.gz
 Source1:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.init
 Source2:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.service
-Source3:	mod_security.conf
+Source3:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/mod_security.conf
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel libxslt-devel perl-devel zlib-devel httpd-devel libxml2-devel curl-devel lua-devel
