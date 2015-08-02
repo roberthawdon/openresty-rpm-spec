@@ -1,3 +1,5 @@
+%global  modsec_version      2.8.0
+
 Name:		ngx_openresty
 Version:	1.9.3.1rc1
 Release:	1%{?dist}
@@ -9,12 +11,19 @@ URL:		openresty.org
 Source0:	http://openresty.org/download/%{name}-%{version}.tar.gz
 Source1:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.init
 Source2:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.service
-Source3:	https://github.com/SpiderLabs/ModSecurity
+Source3:        https://www.modsecurity.org/tarball/%{modsec_version}/modsecurity-apache_%{modsec_version}.tar.gz
+Source4:	mod_secuirty.conf
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:	sed openssl-devel pcre-devel readline-devel
-Requires:	openssl pcre readline
+BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel libxslt-devel perl-devel zlip-devel httpd-devel libxml2-devel curl-devel lua-devel
+Requires:	openssl pcre readline GeoIP gd
 Requires(pre):	shadow-utils
+
+Provides:	webserver mod_security
+
+%if 0%{?rhel} >= 7
+BuildRequires:	systemd
+%endif
 
 %define user nginx
 %define homedir %{_usr}/local/openresty
@@ -28,12 +37,17 @@ OpenResty (aka. ngx_openresty) is a full-fledged web application server by bundl
 
 
 %build
-cd ModSecuirty
-./autogen.sh
-./configure --enable-standalone-module
-make
-cd ../
-./configure --with-ipv6 --with-pcre-jit --with-luajit --add-module=../ModSecurity/nginx/modsecurity
+
+# Build mod_security standalone module
+cd ../modsecurity-%{modsec_version}
+CFLAGS="%{optflags} $(pcre-config --cflags)" ./configure \
+        --enable-standalone-module \
+        --enable-shared 
+make %{?_smp_mflags}
+
+# Build OpenResty
+cd ../%{name}-%{version}
+./configure --with-ipv6 --with-pcre-jit --with-luajit --with-http_geoip_module --add-module="../modsecurity-%{modsec_version}/nginx/modsecurity"
 make %{?_smp_mflags}
 
 
@@ -84,6 +98,7 @@ rm -rf %{buildroot}
 %{homedir}/nginx/conf/fastcgi.conf.default
 %{homedir}/nginx/conf/fastcgi_params.default
 %{homedir}/nginx/conf/mime.types.default
+%{homedir}/nginx/conf/mod_security.conf
 %{homedir}/nginx/conf/nginx.conf.default
 %{homedir}/nginx/conf/scgi_params.default
 %{homedir}/nginx/conf/uwsgi_params.default
