@@ -23,7 +23,14 @@ BuildRequires:	systemd
 %endif
 
 %define user nginx
+%define group %{user}
 %define homedir %{_usr}/local/openresty
+%define nginx_confdir %{_sysconfdir}/nginx
+%define nginx_home_tmp      %{homedir}/tmp
+%define nginx_confdir       %{_sysconfdir}/nginx
+%define nginx_datadir       %{_datadir}/nginx
+%define nginx_logdir        %{_localstatedir}/log/nginx
+%define nginx_webroot       %{nginx_datadir}/html
 
 %description
 OpenResty (aka. ngx_openresty) is a full-fledged web application server by bundling the standard Nginx core, lots of 3rd-party Nginx modules, as well as most of their external dependencies.
@@ -45,7 +52,22 @@ make %{?_smp_mflags}
 
 # Build OpenResty
 cd ../%{name}-%{version}
-./configure --with-ipv6 --with-pcre-jit --with-luajit --with-http_geoip_module --add-module="../ModSecurity/nginx/modsecurity"
+./configure \
+    --prefix=%{nginx_datadir} \
+    --sbin-path=%{_sbindir}/nginx \
+    --conf-path=%{nginx_confdir}/nginx.conf \
+    --error-log-path=%{nginx_logdir}/error.log \
+    --http-log-path=%{nginx_logdir}/access.log \
+    --http-client-body-temp-path=%{nginx_home_tmp}/client_body \
+    --http-proxy-temp-path=%{nginx_home_tmp}/proxy \
+    --http-fastcgi-temp-path=%{nginx_home_tmp}/fastcgi \
+    --http-uwsgi-temp-path=%{nginx_home_tmp}/uwsgi \
+    --http-scgi-temp-path=%{nginx_home_tmp}/scgi \
+    --with-ipv6 \
+    --with-pcre-jit \
+    --with-luajit \
+    --with-http_geoip_module \
+    --add-module="../ModSecurity/nginx/modsecurity"
 make %{?_smp_mflags}
 
 
@@ -84,33 +106,39 @@ rm -rf %{buildroot}
 %if 0%{?rhel} >= 7
 %attr(755,root,root) /usr/lib/systemd/system/nginx.service
 %endif
-%{homedir}/luajit/*
-%{homedir}/lualib/*
-%{homedir}/nginx
-%{homedir}/nginx/html/*
-%{homedir}/nginx/logs
-%{homedir}/nginx/sbin
-%{homedir}/nginx/sbin/nginx
-%{homedir}/bin/resty
 
-%{homedir}/nginx/conf
-%{homedir}/nginx/conf/fastcgi.conf.default
-%{homedir}/nginx/conf/fastcgi_params.default
-%{homedir}/nginx/conf/mime.types.default
-%{homedir}/nginx/conf/nginx.conf.default
-%{homedir}/nginx/conf/scgi_params.default
-%{homedir}/nginx/conf/uwsgi_params.default
-
-%config %{homedir}/nginx/conf/fastcgi.conf
-%config %{homedir}/nginx/conf/fastcgi_params
-%config %{homedir}/nginx/conf/koi-utf
-%config %{homedir}/nginx/conf/koi-win
-%config %{homedir}/nginx/conf/mime.types
-%config %{homedir}/nginx/conf/mod_security.conf
-%config %{homedir}/nginx/conf/nginx.conf
-%config %{homedir}/nginx/conf/scgi_params
-%config %{homedir}/nginx/conf/uwsgi_params
-%config %{homedir}/nginx/conf/win-utf
+%doc LICENSE CHANGES README
+%{nginx_datadir}/
+%{_bindir}/nginx-upgrade
+%{_sbindir}/nginx
+%{_mandir}/man3/nginx.3pm*
+%{_mandir}/man8/nginx.8*
+%{_mandir}/man8/nginx-upgrade.8*
+%dir %{nginx_confdir}
+%dir %{nginx_confdir}/conf.d
+%config(noreplace) %{nginx_confdir}/fastcgi.conf
+%config(noreplace) %{nginx_confdir}/fastcgi.conf.default
+%config(noreplace) %{nginx_confdir}/fastcgi_params
+%config(noreplace) %{nginx_confdir}/fastcgi_params.default
+%config(noreplace) %{nginx_confdir}/koi-utf
+%config(noreplace) %{nginx_confdir}/koi-win
+%config(noreplace) %{nginx_confdir}/mime.types
+%config(noreplace) %{nginx_confdir}/mime.types.default
+%config(noreplace) %{nginx_confdir}/nginx.conf
+%config(noreplace) %{nginx_confdir}/mod_security.conf
+%config(noreplace) %{nginx_confdir}/nginx.conf.default
+%config(noreplace) %{nginx_confdir}/scgi_params
+%config(noreplace) %{nginx_confdir}/scgi_params.default
+%config(noreplace) %{nginx_confdir}/uwsgi_params
+%config(noreplace) %{nginx_confdir}/uwsgi_params.default
+%config(noreplace) %{nginx_confdir}/win-utf
+%config(noreplace) %{_sysconfdir}/logrotate.d/nginx
+%dir %{perl_vendorarch}/auto/nginx
+%{perl_vendorarch}/nginx.pm
+%{perl_vendorarch}/auto/nginx/nginx.so
+%attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_home}
+%attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_home_tmp}
+%attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_logdir}
 
 
 %postun
