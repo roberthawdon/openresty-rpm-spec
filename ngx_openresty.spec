@@ -27,7 +27,7 @@ OpenResty (aka. ngx_openresty) is a full-fledged web application server by bundl
 
 
 %build
-./configure --with-ipv6 --with-pcre-jit --with-luajit
+./configure --with-ipv6 --with-pcre-jit --with-luajit --add-module=../ModSecurity/nginx/modsecurity
 make %{?_smp_mflags}
 
 
