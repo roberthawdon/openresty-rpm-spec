@@ -24,9 +24,9 @@ BuildRequires:	systemd
 
 %define user nginx
 %define group %{user}
-%define homedir %{_usr}/local/openresty
+%define nginx_home %{_usr}/local/openresty
 %define nginx_confdir %{_sysconfdir}/nginx
-%define nginx_home_tmp      %{homedir}/tmp
+%define nginx_home_tmp      %{nginx_home}/tmp
 %define nginx_confdir       %{_sysconfdir}/nginx
 %define nginx_datadir       %{_datadir}/nginx
 %define nginx_logdir        %{_localstatedir}/log/nginx
@@ -73,7 +73,7 @@ make %{?_smp_mflags}
 
 %pre
 getent group %{user} || groupadd -f -r %{user}
-getent passwd %{user} || useradd -M -d %{homedir} -g %{user} -s /bin/nologin %{user}
+getent passwd %{user} || useradd -M -d %{nginx_home} -g %{user} -s /bin/nologin %{user}
 
 
 %install
@@ -81,13 +81,13 @@ rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 %if 0%{?rhel} <= 6
 mkdir -p %{buildroot}/etc/init.d
-sed -e 's/%NGINX_CONF_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{homedir}"), "/", "\\/"); print(esc)}\/nginx\/conf/g' \
-	-e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{homedir}"), "/", "\\/"); print(esc)}\/nginx\/sbin/g' \
+sed -e 's/%NGINX_CONF_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{nginx_home}"), "/", "\\/"); print(esc)}\/nginx\/conf/g' \
+	-e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{nginx_home}"), "/", "\\/"); print(esc)}\/nginx\/sbin/g' \
 	%{SOURCE1} > %{buildroot}/etc/init.d/nginx
 %endif
 %if 0%{?rhel} >= 7
 mkdir -p %{buildroot}/usr/lib/systemd/system
-sed -e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{homedir}"), "/", "\\/"); print(esc)}\/nginx\/sbin/g' \
+sed -e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{nginx_home}"), "/", "\\/"); print(esc)}\/nginx\/sbin/g' \
 	%{SOURCE2} > %{buildroot}/usr/lib/systemd/system/nginx.service
 %endif
 
@@ -113,7 +113,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-#%{homedir}/*
+#%{nginx_home}/*
 
 %if 0%{?rhel} <= 6
 %attr(755,root,root) /etc/init.d/nginx
@@ -122,7 +122,6 @@ rm -rf %{buildroot}
 %attr(755,root,root) /usr/lib/systemd/system/nginx.service
 %endif
 
-%doc LICENSE CHANGES README
 %{nginx_datadir}/
 %{_sbindir}/nginx
 %dir %{nginx_confdir}
@@ -143,9 +142,6 @@ rm -rf %{buildroot}
 %config(noreplace) %{nginx_confdir}/uwsgi_params
 %config(noreplace) %{nginx_confdir}/uwsgi_params.default
 %config(noreplace) %{nginx_confdir}/win-utf
-%dir %{perl_vendorarch}/auto/nginx
-%{perl_vendorarch}/nginx.pm
-%{perl_vendorarch}/auto/nginx/nginx.so
 %attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_home}
 %attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_home_tmp}
 %attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_logdir}
