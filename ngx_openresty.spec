@@ -68,7 +68,7 @@ mkdir -p %{buildroot}/usr/lib/systemd/system
 sed -e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{homedir}"), "/", "\\/"); print(esc)}\/nginx\/sbin/g' \
 	%{SOURCE2} > %{buildroot}/usr/lib/systemd/system/nginx.service
 %endif
-cp %{SOURCE3} > %{buildroot}/usr/local/openresty/nginx/conf/mod_security.conf
+cp %{SOURCE3} %{buildroot}/usr/local/openresty/nginx/conf/mod_security.conf
 
 %clean
 rm -rf %{buildroot}
