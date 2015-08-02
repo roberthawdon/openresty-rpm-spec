@@ -37,6 +37,7 @@ OpenResty (aka. ngx_openresty) is a full-fledged web application server by bundl
 
 # Build mod_security standalone module
 cd ../ModSecurity
+./autogen.sh
 CFLAGS="%{optflags} $(pcre-config --cflags)" ./configure \
         --enable-standalone-module \
         --enable-shared 
