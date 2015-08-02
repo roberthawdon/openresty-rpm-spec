@@ -1,5 +1,3 @@
-%global  modsec_version      2.9.0
-
 Name:		ngx_openresty
 Version:	1.9.3.1rc1
 Release:	1%{?dist}
@@ -11,8 +9,7 @@ URL:		openresty.org
 Source0:	http://openresty.org/download/%{name}-%{version}.tar.gz
 Source1:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.init
 Source2:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.service
-Source3:        https://www.modsecurity.org/tarball/%{modsec_version}/modsecurity-apache_%{modsec_version}.tar.gz
-Source4:	mod_secuirty.conf
+Source3:	mod_secuirty.conf
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel libxslt-devel perl-devel zlib-devel httpd-devel libxml2-devel curl-devel lua-devel
@@ -39,7 +36,7 @@ OpenResty (aka. ngx_openresty) is a full-fledged web application server by bundl
 %build
 
 # Build mod_security standalone module
-cd ../modsecurity-%{modsec_version}
+cd ../ModSecurity
 CFLAGS="%{optflags} $(pcre-config --cflags)" ./configure \
         --enable-standalone-module \
         --enable-shared 
@@ -47,7 +44,7 @@ make %{?_smp_mflags}
 
 # Build OpenResty
 cd ../%{name}-%{version}
-./configure --with-ipv6 --with-pcre-jit --with-luajit --with-http_geoip_module --add-module="../modsecurity-%{modsec_version}/nginx/modsecurity"
+./configure --with-ipv6 --with-pcre-jit --with-luajit --with-http_geoip_module --add-module="../ModSecurity/nginx/modsecurity"
 make %{?_smp_mflags}
 
 
