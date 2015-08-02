@@ -22,10 +22,10 @@ Provides:	webserver mod_security
 BuildRequires:	systemd
 %endif
 
-%define user nginx
-%define group %{user}
-%define nginx_home %{_usr}/local/openresty
-%define nginx_confdir %{_sysconfdir}/nginx
+%define nginx_user nginx
+%define nginx_group         %{nginx_user}
+%define nginx_home          %{_localstatedir}/lib/nginx
+%define nginx_confdir       %{_sysconfdir}/nginx
 %define nginx_home_tmp      %{nginx_home}/tmp
 %define nginx_confdir       %{_sysconfdir}/nginx
 %define nginx_datadir       %{_datadir}/nginx
@@ -72,8 +72,8 @@ make %{?_smp_mflags}
 
 
 %pre
-getent group %{user} || groupadd -f -r %{user}
-getent passwd %{user} || useradd -M -d %{nginx_home} -g %{user} -s /bin/nologin %{user}
+getent group %{nginx_user} || groupadd -f -r %{nginx_user}
+getent passwd %{nginx_user} || useradd -M -d %{nginx_home} -g %{nginx_group} -s /bin/nologin %{nginx_user}
 
 
 %install
