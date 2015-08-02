@@ -7,7 +7,8 @@ Group:		Productivity/Networking/Web/Servers
 License:	BSD
 URL:		openresty.org
 Source0:	http://openresty.org/download/%{name}-%{version}.tar.gz
-Source1:	https://github.com/brnt/openresty-rpm-spec/raw/master/nginx.init
+Source1:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.init
+Source2:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.service
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:	sed openssl-devel pcre-devel readline-devel
@@ -38,11 +39,17 @@ getent passwd %{user} || useradd -M -d %{homedir} -g %{user} -s /bin/nologin %{u
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
+%if 0%{?rhel} <= 6
 mkdir -p %{buildroot}/etc/init.d
 sed -e 's/%NGINX_CONF_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{homedir}"), "/", "\\/"); print(esc)}\/nginx\/conf/g' \
 	-e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{homedir}"), "/", "\\/"); print(esc)}\/nginx\/sbin/g' \
 	%{SOURCE1} > %{buildroot}/etc/init.d/nginx
-
+%endif
+%if 0%{?rhel} >= 7
+mkdir -p %{buildroot}/usr/lib/systemd/system
+sed -e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{homedir}"), "/", "\\/"); print(esc)}\/nginx\/sbin/g' \
+	%{SOURCE2} > %{buildroot}/usr/lib/systemd/system/nginx.service
+%endif
 
 %clean
 rm -rf %{buildroot}
@@ -52,7 +59,12 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 #%{homedir}/*
 
+%if 0%{?rhel} <= 6
 %attr(755,root,root) /etc/init.d/nginx
+%endif
+%if 0%{?rhel} >= 7
+%attr(755,root,root) /usr/lib/systemd/system/nginx.service
+%endif
 %{homedir}/luajit/*
 %{homedir}/lualib/*
 %{homedir}/nginx
