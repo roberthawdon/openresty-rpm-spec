@@ -57,6 +57,7 @@ cd ../%{name}-%{version}
     --sbin-path=%{_sbindir}/nginx \
     --conf-path=%{nginx_confdir}/nginx.conf \
     --error-log-path=%{nginx_logdir}/error.log \
+    --pid-path=/var/run \
     --http-log-path=%{nginx_logdir}/access.log \
     --http-client-body-temp-path=%{nginx_home_tmp}/client_body \
     --http-proxy-temp-path=%{nginx_home_tmp}/proxy \
