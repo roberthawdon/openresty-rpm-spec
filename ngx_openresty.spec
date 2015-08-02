@@ -9,6 +9,7 @@ URL:		openresty.org
 Source0:	http://openresty.org/download/%{name}-%{version}.tar.gz
 Source1:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.init
 Source2:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.service
+Source3:	https://github.com/SpiderLabs/ModSecurity
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:	sed openssl-devel pcre-devel readline-devel
@@ -38,6 +39,11 @@ getent passwd %{user} || useradd -M -d %{homedir} -g %{user} -s /bin/nologin %{u
 
 %install
 rm -rf %{buildroot}
+cd ModSecuirty
+./autogen.sh
+./configure --enable-standalone-module
+make
+cd ../
 make install DESTDIR=%{buildroot}
 %if 0%{?rhel} <= 6
 mkdir -p %{buildroot}/etc/init.d
