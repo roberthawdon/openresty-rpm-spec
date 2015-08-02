@@ -15,7 +15,7 @@ Source3:        https://www.modsecurity.org/tarball/%{modsec_version}/modsecurit
 Source4:	mod_secuirty.conf
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel libxslt-devel perl-devel zlip-devel httpd-devel libxml2-devel curl-devel lua-devel
+BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel libxslt-devel perl-devel zlib-devel httpd-devel libxml2-devel curl-devel lua-devel
 Requires:	openssl pcre readline GeoIP gd
 Requires(pre):	shadow-utils
 
