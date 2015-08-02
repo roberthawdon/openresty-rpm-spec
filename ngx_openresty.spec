@@ -90,7 +90,22 @@ mkdir -p %{buildroot}/usr/lib/systemd/system
 sed -e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{homedir}"), "/", "\\/"); print(esc)}\/nginx\/sbin/g' \
 	%{SOURCE2} > %{buildroot}/usr/lib/systemd/system/nginx.service
 %endif
-cp %{SOURCE3} %{buildroot}/etc/nginx/mod_security.conf
+
+find %{buildroot} -type f -name .packlist -exec rm -f '{}' \;
+find %{buildroot} -type f -name perllocal.pod -exec rm -f '{}' \;
+find %{buildroot} -type f -empty -exec rm -f '{}' \;
+find %{buildroot} -type f -iname '*.so' -exec chmod 0755 '{}' \;
+
+install -p -d -m 0755 %{buildroot}%{nginx_confdir}/conf.d
+install -p -d -m 0700 %{buildroot}%{nginx_home}
+install -p -d -m 0700 %{buildroot}%{nginx_home_tmp}
+install -p -d -m 0700 %{buildroot}%{nginx_logdir}
+install -p -d -m 0755 %{buildroot}%{nginx_webroot}
+
+
+install -p -m 0644 %{SOURCE3} \
+    %{buildroot}%{nginx_confdir}
+
 
 %clean
 rm -rf %{buildroot}
@@ -109,11 +124,7 @@ rm -rf %{buildroot}
 
 %doc LICENSE CHANGES README
 %{nginx_datadir}/
-%{_bindir}/nginx-upgrade
 %{_sbindir}/nginx
-%{_mandir}/man3/nginx.3pm*
-%{_mandir}/man8/nginx.8*
-%{_mandir}/man8/nginx-upgrade.8*
 %dir %{nginx_confdir}
 %dir %{nginx_confdir}/conf.d
 %config(noreplace) %{nginx_confdir}/fastcgi.conf
@@ -132,7 +143,6 @@ rm -rf %{buildroot}
 %config(noreplace) %{nginx_confdir}/uwsgi_params
 %config(noreplace) %{nginx_confdir}/uwsgi_params.default
 %config(noreplace) %{nginx_confdir}/win-utf
-%config(noreplace) %{_sysconfdir}/logrotate.d/nginx
 %dir %{perl_vendorarch}/auto/nginx
 %{perl_vendorarch}/nginx.pm
 %{perl_vendorarch}/auto/nginx/nginx.so
