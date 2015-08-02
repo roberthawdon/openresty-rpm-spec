@@ -28,6 +28,11 @@ OpenResty (aka. ngx_openresty) is a full-fledged web application server by bundl
 
 
 %build
+cd ModSecuirty
+./autogen.sh
+./configure --enable-standalone-module
+make
+cd ../
 ./configure --with-ipv6 --with-pcre-jit --with-luajit --add-module=../ModSecurity/nginx/modsecurity
 make %{?_smp_mflags}
 
@@ -39,11 +44,6 @@ getent passwd %{user} || useradd -M -d %{homedir} -g %{user} -s /bin/nologin %{u
 
 %install
 rm -rf %{buildroot}
-cd ModSecuirty
-./autogen.sh
-./configure --enable-standalone-module
-make
-cd ../
 make install DESTDIR=%{buildroot}
 %if 0%{?rhel} <= 6
 mkdir -p %{buildroot}/etc/init.d
