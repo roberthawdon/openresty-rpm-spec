@@ -1,4 +1,4 @@
-%global  modsec_version      2.8.0
+%global  modsec_version      2.9.0
 
 Name:		ngx_openresty
 Version:	1.9.3.1rc1
