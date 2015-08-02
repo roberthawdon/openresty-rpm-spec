@@ -81,13 +81,13 @@ rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 %if 0%{?rhel} <= 6
 mkdir -p %{buildroot}/etc/init.d
-sed -e 's/%NGINX_CONF_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{nginx_confdir}"), "/", "\\/"); print(esc)}\/g' \
-	-e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{_sbindir}"), "/", "\\/"); print(esc)}\/g' \
+sed -e 's/%NGINX_CONF_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{nginx_confdir}"), "/", "\\/"); print(esc)}/g' \
+	-e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{_sbindir}"), "/", "\\/"); print(esc)}/g' \
 	%{SOURCE1} > %{buildroot}/etc/init.d/nginx
 %endif
 %if 0%{?rhel} >= 7
 mkdir -p %{buildroot}/usr/lib/systemd/system
-sed -e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{_sbindir}"), "/", "\\/"); print(esc)}\/g' \
+sed -e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{_sbindir}"), "/", "\\/"); print(esc)}\g' \
 	%{SOURCE2} > %{buildroot}/usr/lib/systemd/system/nginx.service
 %endif
 
