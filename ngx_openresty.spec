@@ -68,6 +68,7 @@ mkdir -p %{buildroot}/usr/lib/systemd/system
 sed -e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{homedir}"), "/", "\\/"); print(esc)}\/nginx\/sbin/g' \
 	%{SOURCE2} > %{buildroot}/usr/lib/systemd/system/nginx.service
 %endif
+cp %{SOURCE3} > %{buildroot}/usr/local/openresty/nginx/conf/mod_security.conf
 
 %clean
 rm -rf %{buildroot}
@@ -96,7 +97,6 @@ rm -rf %{buildroot}
 %{homedir}/nginx/conf/fastcgi.conf.default
 %{homedir}/nginx/conf/fastcgi_params.default
 %{homedir}/nginx/conf/mime.types.default
-%{homedir}/nginx/conf/mod_security.conf
 %{homedir}/nginx/conf/nginx.conf.default
 %{homedir}/nginx/conf/scgi_params.default
 %{homedir}/nginx/conf/uwsgi_params.default
@@ -106,6 +106,7 @@ rm -rf %{buildroot}
 %config %{homedir}/nginx/conf/koi-utf
 %config %{homedir}/nginx/conf/koi-win
 %config %{homedir}/nginx/conf/mime.types
+%config %{homedir}/nginx/conf/mod_security.conf
 %config %{homedir}/nginx/conf/nginx.conf
 %config %{homedir}/nginx/conf/scgi_params
 %config %{homedir}/nginx/conf/uwsgi_params
