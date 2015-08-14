@@ -107,6 +107,7 @@ install -p -d -m 0755 %{buildroot}%{nginx_webroot}
 install -p -m 0644 %{SOURCE3} \
     %{buildroot}%{nginx_confdir}
 
+ln -s /usr/local/lib/libluajit-5.1.so.2 /lib64/libluajit-5.1.so.2
 
 %clean
 rm -rf %{buildroot}
