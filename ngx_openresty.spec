@@ -107,7 +107,7 @@ install -p -d -m 0755 %{buildroot}%{nginx_webroot}
 install -p -m 0644 %{SOURCE3} \
     %{buildroot}%{nginx_confdir}
 
-ln -sf ${RPM_BUILD_ROOT}/usr/share/nginx/luajit/lib/libluajit-5.1.so.2 ${RPM_BUILD_ROOT}/lib64/libluajit-5.1.so.2
+ln -sf %{buildroot}/usr/share/nginx/luajit/lib/libluajit-5.1.so.2 /lib64/libluajit-5.1.so.2
 
 %clean
 rm -rf %{buildroot}
@@ -123,7 +123,6 @@ rm -rf %{buildroot}
 %if 0%{?rhel} >= 7
 %attr(755,root,root) /usr/lib/systemd/system/nginx.service
 %endif
-
 %{nginx_datadir}/
 %{_sbindir}/nginx
 %dir %{nginx_confdir}
