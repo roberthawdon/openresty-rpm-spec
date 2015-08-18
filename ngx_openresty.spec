@@ -108,7 +108,7 @@ install -p -m 0644 %{SOURCE3} \
 
 mkdir ${RPM_BUILD_ROOT}%{_libdir}
 
-ln -sf /usr/share/nginx/luajit/lib/libluajit-5.1.so.2 ${RPM_BUILD_ROOT}%{_libdir}
+ln -sf /usr/share/nginx/luajit/lib/libluajit-5.1.so ${RPM_BUILD_ROOT}%{_libdir}/libluajit-5.1.so.2
 
 %clean
 rm -rf %{buildroot}
