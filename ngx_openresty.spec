@@ -127,6 +127,7 @@ rm -rf %{buildroot}
 %endif
 %{nginx_datadir}/
 %{_sbindir}/nginx
+%attr(755,root,root) /lib64/libluajit-5.1.so.2
 %dir %{nginx_confdir}
 %dir %{nginx_confdir}/conf.d
 %config(noreplace) %{nginx_confdir}/fastcgi.conf
