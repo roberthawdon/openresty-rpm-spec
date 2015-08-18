@@ -92,8 +92,6 @@ sed -e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{_sbindir}"), 
 	%{SOURCE2} > %{buildroot}/usr/lib/systemd/system/nginx.service
 %endif
 
-mkdir -p %{buildroot}/lib64
-
 find %{buildroot} -type f -name .packlist -exec rm -f '{}' \;
 find %{buildroot} -type f -name perllocal.pod -exec rm -f '{}' \;
 find %{buildroot} -type f -empty -exec rm -f '{}' \;
@@ -105,11 +103,12 @@ install -p -d -m 0700 %{buildroot}%{nginx_home_tmp}
 install -p -d -m 0700 %{buildroot}%{nginx_logdir}
 install -p -d -m 0755 %{buildroot}%{nginx_webroot}
 
-
 install -p -m 0644 %{SOURCE3} \
     %{buildroot}%{nginx_confdir}
 
-ln -sf %{buildroot}/usr/share/nginx/luajit/lib/libluajit-5.1.so.2 ../../../../../lib64/libluajit-5.1.so.2
+mkdir ${RPM_BUILD_ROOT}%{_libdir}
+
+ln -sf /usr/share/nginx/luajit/lib/libluajit-5.1.so.2 ${RPM_BUILD_ROOT}%{_libdir}
 
 %clean
 rm -rf %{buildroot}
@@ -145,8 +144,7 @@ rm -rf %{buildroot}
 %config(noreplace) %{nginx_confdir}/uwsgi_params
 %config(noreplace) %{nginx_confdir}/uwsgi_params.default
 %config(noreplace) %{nginx_confdir}/win-utf
-%dir /lib64
-/lib64/libluajit-5.1.so.2
+%{_libdir}/libluajit-5.1.so.2
 %attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_home}
 %attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_home_tmp}
 %attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_logdir}
