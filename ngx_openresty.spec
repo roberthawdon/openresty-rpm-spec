@@ -92,6 +92,8 @@ sed -e 's/%NGINX_BIN_DIR%/%{lua: esc,qty=string.gsub(rpm.expand("%{_sbindir}"), 
 	%{SOURCE2} > %{buildroot}/usr/lib/systemd/system/nginx.service
 %endif
 
+mkdir -p %{buildroot}/lib64
+
 find %{buildroot} -type f -name .packlist -exec rm -f '{}' \;
 find %{buildroot} -type f -name perllocal.pod -exec rm -f '{}' \;
 find %{buildroot} -type f -empty -exec rm -f '{}' \;
