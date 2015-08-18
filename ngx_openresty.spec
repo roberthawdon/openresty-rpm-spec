@@ -127,7 +127,6 @@ rm -rf %{buildroot}
 %endif
 %{nginx_datadir}/
 %{_sbindir}/nginx
-%attr(755,root,root) /lib64/libluajit-5.1.so.2
 %dir %{nginx_confdir}
 %dir %{nginx_confdir}/conf.d
 %config(noreplace) %{nginx_confdir}/fastcgi.conf
@@ -147,6 +146,7 @@ rm -rf %{buildroot}
 %config(noreplace) %{nginx_confdir}/uwsgi_params.default
 %config(noreplace) %{nginx_confdir}/win-utf
 %dir /lib64
+/lib64/libluajit-5.1.so.2
 %attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_home}
 %attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_home_tmp}
 %attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_logdir}
