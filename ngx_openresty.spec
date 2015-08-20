@@ -1,5 +1,5 @@
 Name:		ngx_openresty
-Version:	1.9.3.1rc1
+Version:	1.9.3.1
 Release:	1%{?dist}
 Summary:	a fast web app server by extending nginx
 
