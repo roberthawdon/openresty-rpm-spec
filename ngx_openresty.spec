@@ -12,7 +12,7 @@ Source2:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.ser
 Source3:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/mod_security.conf
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel libxslt-devel perl-devel zlib-devel httpd-devel libxml2-devel curl-devel lua-devel
+BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel libxslt-devel perl-devel zlib-devel httpd-devel libxml2-devel curl-devel lua-devel perl-ExtUtils-Embed
 Requires:	openssl pcre readline GeoIP gd
 Requires(pre):	shadow-utils
 
@@ -74,7 +74,6 @@ cd ../%{name}-%{version}
     --with-http_degradation_module \
     --with-http_perl_module \
     --with-http_flv_module \
-    --with-google_perftools_module \
     --with-http_gzip_static_module \
     --with-http_gunzip_module \
     --with-http_image_filter_module \
