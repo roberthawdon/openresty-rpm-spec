@@ -1,6 +1,6 @@
 Name:		ngx_openresty
-Version:	1.9.3.1
-Release:	1%{?dist}
+Version:        TC_ORV	
+Release:	TC_BUILD%{?dist}
 Summary:	a fast web app server by extending nginx
 
 Group:		Productivity/Networking/Web/Servers
