@@ -126,7 +126,7 @@ install -p -d -m 0755 %{buildroot}%{nginx_webroot}
 install -p -m 0644 %{SOURCE3} \
     %{buildroot}%{nginx_confdir}
 
-mkdir ${RPM_BUILD_ROOT}%{_libdir}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}
 
 ln -sf /usr/share/nginx/luajit/lib/libluajit-5.1.so ${RPM_BUILD_ROOT}%{_libdir}/libluajit-5.1.so.2
 
