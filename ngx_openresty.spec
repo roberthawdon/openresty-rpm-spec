@@ -165,6 +165,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{nginx_confdir}/uwsgi_params.default
 %config(noreplace) %{nginx_confdir}/win-utf
 %{_libdir}/libluajit-5.1.so.2
+%attr(755,root,root) /usr/local/%{_libdir}/perl5/auto/nginx/nginx.so
+%attr(755,root,root) /usr/local/%{_libdir}/perl5/nginx.pm
+%attr(755,root,root) /usr/local/share/man/man3/nginx.3pm
 %attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_home}
 %attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_home_tmp}
 %attr(700,%{nginx_user},%{nginx_group}) %dir %{nginx_logdir}
