@@ -16,6 +16,8 @@ BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel 
 Requires:	openssl pcre readline GeoIP gd
 Requires(pre):	shadow-utils
 
+Conflicts:      nginx
+
 Provides:	webserver mod_security
 
 %if 0%{?rhel} >= 7
