@@ -16,7 +16,7 @@ BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel 
 Requires:	openssl pcre readline GeoIP gd
 Requires(pre):	shadow-utils
 
-Conflicts:      nginx
+Obsoletes:      nginx
 
 Provides:	webserver mod_security
 
