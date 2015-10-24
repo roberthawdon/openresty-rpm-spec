@@ -10,6 +10,7 @@ Source0:	http://openresty.org/download/%{name}-%{version}.tar.gz
 Source1:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.init
 Source2:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.service
 Source3:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/mod_security.conf
+Source4:	https://github.com/roberthawdon/openresty-rpm-spec/raw/tc/index.html
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel libxslt-devel perl-devel zlib-devel httpd-devel libxml2-devel curl-devel lua-devel perl-ExtUtils-Embed
@@ -125,8 +126,9 @@ install -p -d -m 0700 %{buildroot}%{nginx_home_tmp}
 install -p -d -m 0700 %{buildroot}%{nginx_logdir}
 install -p -d -m 0755 %{buildroot}%{nginx_webroot}
 
-install -p -m 0644 %{SOURCE3} \
-    %{buildroot}%{nginx_confdir}
+install -p -m 0644 %{SOURCE3} %{buildroot}%{nginx_confdir}
+
+install -p -m 0644 %{SOURCE4} %{buildroot}%{nginx_webroot}
 
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}
 
@@ -166,6 +168,7 @@ rm -rf %{buildroot}
 %config(noreplace) %{nginx_confdir}/uwsgi_params
 %config(noreplace) %{nginx_confdir}/uwsgi_params.default
 %config(noreplace) %{nginx_confdir}/win-utf
+%config(noreplace) %{nginx_webroot}/index.html
 %{_libdir}/libluajit-5.1.so.2
 %ifarch x86_64 ppc64 sparc64
 %attr(755,root,root) /usr/local/lib64/perl5/auto/nginx/nginx.so
