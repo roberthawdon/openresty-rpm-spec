@@ -11,9 +11,11 @@ Source1:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.ini
 Source2:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.service
 Source3:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/mod_security.conf
 Source4:	https://github.com/roberthawdon/openresty-rpm-spec/raw/tc/index.html
+Source5:        https://www.modsecurity.org/tarball/TC_MSVER/modsecurity-TC_MSVER.tar.gz
+Source6:        https://github.com/zebrafishlabs/nginx-statsd/archive/master.zip
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel libxslt-devel perl-devel zlib-devel httpd-devel libxml2-devel curl-devel lua-devel perl-ExtUtils-Embed
+BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel libxslt-devel perl-devel zlib-devel httpd-devel libxml2-devel curl-devel lua-devel perl-ExtUtils-Embed automake
 Requires:	openssl pcre readline GeoIP gd
 Requires(pre):	shadow-utils
 
@@ -45,16 +47,26 @@ OpenResty (aka. ngx_openresty) is a full-fledged web application server by bundl
 
 %build
 
+
 # Build mod_security standalone module
-cd ../ModSecurity
+cd ..
+cp ../SOURCES/modsecurity-TC_MSVER.tar.gz .
+tar xzf modsecurity-TC_MSVER.tar.gz
+cd modsecurity-TC_MSVER
 ./autogen.sh
 CFLAGS="%{optflags} $(pcre-config --cflags)" ./configure \
         --enable-standalone-module \
         --enable-shared 
 make %{?_smp_mflags}
 
+# Extract and prepare nginx-statsd
+
+cd ..
+cp ../SOURCES/master.zip .
+unzip master.zip
+
 # Build OpenResty
-cd ../%{name}-%{version}
+cd %{name}-%{version}
 ./configure \
     --prefix=%{nginx_datadir} \
     --sbin-path=%{_sbindir}/nginx \
@@ -83,7 +95,7 @@ cd ../%{name}-%{version}
     --with-http_mp4_module \
     --with-http_random_index_module \
     --with-http_secure_link_module \
-    --with-http_spdy_module \
+    --with-http_v2_module \
     --with-http_ssl_module \
     --with-http_stub_status_module \
     --with-http_sub_module \
@@ -91,7 +103,8 @@ cd ../%{name}-%{version}
     --with-http_xslt_module \
     --with-mail \
     --with-mail_ssl_module \
-    --add-module="../ModSecurity/nginx/modsecurity"
+    --add-module="../modsecurity-TC_MSVER/nginx/modsecurity" \
+    --add-module="../nginx-statsd-master"
 make %{?_smp_mflags}
 
 
@@ -185,6 +198,9 @@ rm -rf %{buildroot}
 
 %postun
 
+%if 0%{?rhel} >= 7
+/bin/systemctl daemon-reload 2>&1
+%endif
 
 %changelog
 
