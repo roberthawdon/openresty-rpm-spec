@@ -7,12 +7,11 @@ Group:		Productivity/Networking/Web/Servers
 License:	BSD
 URL:		openresty.org
 Source0:	http://openresty.org/download/%{name}-%{version}.tar.gz
-Source1:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.init
-Source2:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/nginx.service
-Source3:	https://github.com/roberthawdon/openresty-rpm-spec/raw/master/mod_security.conf
-Source4:	https://github.com/roberthawdon/openresty-rpm-spec/raw/tc/index.html
+Source1:	https://github.com/roberthawdon/openresty-rpm-spec/raw/op-ezy/nginx.init
+Source2:	https://github.com/roberthawdon/openresty-rpm-spec/raw/op-ezy/nginx.service
+Source3:	https://github.com/roberthawdon/openresty-rpm-spec/raw/op-ezy/mod_security.conf
+Source4:	https://github.com/roberthawdon/openresty-rpm-spec/raw/op-ezy/index.html
 Source5:        https://www.modsecurity.org/tarball/TC_MSVER/modsecurity-TC_MSVER.tar.gz
-Source6:        https://github.com/zebrafishlabs/nginx-statsd/archive/master.zip
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel libxslt-devel perl-devel zlib-devel httpd-devel libxml2-devel curl-devel lua-devel perl-ExtUtils-Embed automake
@@ -59,12 +58,6 @@ CFLAGS="%{optflags} $(pcre-config --cflags)" ./configure \
         --enable-shared 
 make %{?_smp_mflags}
 
-# Extract and prepare nginx-statsd
-
-cd ..
-cp ../SOURCES/master.zip .
-unzip master.zip
-
 # Build OpenResty
 cd %{name}-%{version}
 ./configure \
@@ -104,7 +97,6 @@ cd %{name}-%{version}
     --with-mail \
     --with-mail_ssl_module \
     --add-module="../modsecurity-TC_MSVER/nginx/modsecurity" \
-    --add-module="../nginx-statsd-master"
 make %{?_smp_mflags}
 
 
