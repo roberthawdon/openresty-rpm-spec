@@ -1,4 +1,4 @@
-Name:		ngx_openresty
+Name:		openresty
 Version:        TC_ORV	
 Release:	TC_BUILD%{?dist}
 Summary:	a fast web app server by extending nginx
@@ -38,7 +38,7 @@ BuildRequires:	systemd
 %define nginx_webroot       %{nginx_datadir}/html
 
 %description
-OpenResty (aka. ngx_openresty) is a full-fledged web application server by bundling the standard Nginx core, lots of 3rd-party Nginx modules, as well as most of their external dependencies.
+OpenResty (aka. openresty) is a full-fledged web application server by bundling the standard Nginx core, lots of 3rd-party Nginx modules, as well as most of their external dependencies.
 
 
 %prep
