@@ -97,7 +97,7 @@ cd %{name}-%{version}
     --with-http_xslt_module \
     --with-mail \
     --with-mail_ssl_module \
-    --add-module="../modsecurity-TC_MSVER/nginx/modsecurity" \
+    --add-module="../modsecurity-TC_MSVER/nginx/modsecurity" 
 make %{?_smp_mflags}
 
 
