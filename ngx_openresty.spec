@@ -57,6 +57,7 @@ CFLAGS="%{optflags} $(pcre-config --cflags)" ./configure \
         --enable-standalone-module \
         --enable-shared 
 make %{?_smp_mflags}
+cd ..
 
 # Build OpenResty
 cd %{name}-%{version}
