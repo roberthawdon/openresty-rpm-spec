@@ -19,7 +19,7 @@ BuildRequires:	sed openssl-devel pcre-devel readline-devel GeoIP-devel gd-devel 
 Requires:	openssl pcre readline GeoIP gd
 Requires(pre):	shadow-utils
 
-Obsoletes:      nginx
+Obsoletes:      nginx ngx_openresty
 
 Provides:	webserver mod_security
 
